@@ -29,6 +29,11 @@ namespace Kontur.Courses.Testing.Patterns.Specifications
 		private readonly MarkdownProcessor md = new MarkdownProcessor();
 
 	    [Test]
+	    void em()
+	    {
+
+	    }
+	    [Test]
 	    public void not_change_text()
 	    {
 	        var input = "klasjd;lkfja asdfas";
