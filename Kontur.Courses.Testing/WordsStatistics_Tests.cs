@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Kontur.Courses.Testing.Implementations;
 using NUnit.Framework;
@@ -151,17 +152,6 @@ namespace Kontur.Courses.Testing
         }
 
         [Test]
-        public void test_no_time()
-        {
-            stat.AddWord("ababas");
-            stat.AddWord("asdasd");
-            stat.AddWord("asdasd");
-            stat.AddWord("asdasasdjkasdhHHH");
-
-            CollectionAssert.AreEqual(new [] { }, stat.GetStatistics());
-        }
-
-        [Test]
         public void nulls_words()
         {
             stat.AddWord(null);
@@ -169,6 +159,58 @@ namespace Kontur.Courses.Testing
             stat.AddWord(null);
 
             CollectionAssert.AreEqual(new Tuple<int, string>[] { }, stat.GetStatistics());
+        }
+
+        [Timeout(2000)]
+        [Test]
+        public void hundred_thouthand_words_will_be_added()
+        {
+            var mystats = new Dictionary<string, int>();
+            var rnd = new Random();
+            for (int i = 0; i < 100000; i++)
+            {
+                var word = "";
+                var len = rnd.Next(1, 20);
+                for (int j = 0; j < len; j++)
+                {
+                    word += (char) rnd.Next(26);
+                }
+                stat.AddWord(word);
+                if (string.IsNullOrEmpty(word)) return;
+                if (word.Length > 10) word = word.Substring(0, 10);
+                int count;
+                mystats[word.ToLower()] = mystats.TryGetValue(word.ToLower(), out count) ? count + 1 : 1;
+            }
+
+            var answer = mystats.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key).Select(kv => Tuple.Create(kv.Value, kv.Key));
+
+            CollectionAssert.AreEqual(answer, stat.GetStatistics());
+        }
+
+        [Timeout(30000)]
+        [Test]
+        public void million_words_will_be_added()
+        {
+            var mystats = new Dictionary<string, int>();
+            var rnd = new Random();
+            for (int i = 0; i < 10000000; i++)
+            {
+                var word = "";
+                var len = rnd.Next(1, 20);
+                for (int j = 0; j < len; j++)
+                {
+                    word += (char)rnd.Next(3);
+                }
+                stat.AddWord(word);
+                if (string.IsNullOrEmpty(word)) return;
+                if (word.Length > 10) word = word.Substring(0, 10);
+                int count;
+                mystats[word.ToLower()] = mystats.TryGetValue(word.ToLower(), out count) ? count + 1 : 1;
+            }
+
+            var answer = mystats.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key).Select(kv => Tuple.Create(kv.Value, kv.Key));
+
+            CollectionAssert.AreEqual(answer, stat.GetStatistics());
         }
 	}
 }
