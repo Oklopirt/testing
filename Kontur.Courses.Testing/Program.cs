@@ -15,6 +15,7 @@ namespace Kontur.Courses.Testing
 			if (!CheckTests()) return;
 			var implementations = GetImplementations();
 			CheckIncorrectImplementationsFail(implementations);
+		    Console.Read();
 		}
 
 		private static void CheckIncorrectImplementationsFail(IEnumerable<Type> implementations)

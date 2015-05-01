@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Kontur.Courses.Testing.Implementations;
 using NUnit.Framework;
 
@@ -44,5 +45,38 @@ namespace Kontur.Courses.Testing
 			stat.AddWord("world");
 			CollectionAssert.AreEqual(new[] { Tuple.Create(2, "world"), Tuple.Create(1, "hello") }, stat.GetStatistics());
 		}
+
+        [Test]
+        public void by_descending () {
+            stat.AddWord("o");
+            stat.AddWord("zrrR");
+            stat.AddWord("Yy");
+            stat.AddWord("tttt");
+            stat.AddWord("ttTt");
+            stat.AddWord("yy");
+            stat.AddWord("Tttt");
+            stat.AddWord("zrrr");
+            stat.AddWord("zRrr");
+            CollectionAssert.AreEqual(new[] {Tuple.Create(3, "tttt"), Tuple.Create(3, "zrrr"), Tuple.Create(2, "yy"), Tuple.Create(1, "o")}, stat.GetStatistics());
+        }
+
+	    [Test]
+	    public void empty_and_null_string()
+	    {
+            stat.AddWord("");
+            stat.AddWord(null);
+            CollectionAssert.AreEqual(new Tuple<int, string>[] {}, stat.GetStatistics());
+        }
+
+        [Test]
+        public void same_ditionary () {
+            stat.AddWord("hello");
+            stat.AddWord("world");
+            stat.AddWord("world");
+            stat = createStat();
+            stat.AddWord("world");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(1, "world")}, stat.GetStatistics());
+        }
+
 	}
 }

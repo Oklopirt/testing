@@ -113,10 +113,7 @@ namespace Kontur.Courses.Testing.Implementations
 
 		public IEnumerable<Tuple<int, string>> GetStatistics()
 		{
-			return stats.OrderByDescending(kv => kv.Value)
-				.ThenBy(kv => kv.Key)
-				.ToDictionary(kv => kv.Key, kv => kv.Value)
-				.Select(kv => Tuple.Create(kv.Value, kv.Key));
+			return stats.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value).Select(kv => Tuple.Create(kv.Value, kv.Key));
 		}
 	}
 	public class WordsStatistics7 : IWordsStatistics
