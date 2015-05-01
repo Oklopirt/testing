@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Kontur.Courses.Testing.Implementations;
 using NUnit.Framework;
 
@@ -44,5 +45,130 @@ namespace Kontur.Courses.Testing
 			stat.AddWord("world");
 			CollectionAssert.AreEqual(new[] { Tuple.Create(2, "world"), Tuple.Create(1, "hello") }, stat.GetStatistics());
 		}
+
+        [Test]
+        public void two_same_words_in_different_registers()
+        {
+            stat.AddWord("HelLo");
+            stat.AddWord("HellO");
+            stat.AddWord("heLLo");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(3, "hello") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void words_more_than_ten_symbol()
+        {
+            stat.AddWord("abacabadaba");
+            stat.AddWord("abAcabadabA");
+            stat.AddWord("abacAbaDaba");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(3, "abacabadab") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void words_more_than_ten_symbol_lex_oreder()
+        {
+            stat.AddWord("abacabadaba");
+            stat.AddWord("abAcabadabA");
+            stat.AddWord("abacAbaDaba");
+            stat.AddWord("**--");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(3, "abacabadab"), Tuple.Create(1, "**--") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void words_more_than_ten_symbol_lex_oreder2()
+        {
+            stat.AddWord("abacabadaba");
+            stat.AddWord("abAcabadabA");
+            stat.AddWord("abacAbaDaba");
+            stat.AddWord("**--");
+            stat.AddWord("**--");
+            stat.AddWord("**--");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(3, "**--"), Tuple.Create(3, "abacabadab") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void check_by_descending()
+        {
+            stat.AddWord("bb");
+            stat.AddWord("bb");
+            stat.AddWord("bb");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(4, "aa") , Tuple.Create(3, "bb")}, stat.GetStatistics());
+        }
+
+        [Test]
+        public void check_by_descending_with_register()
+        {
+            stat.AddWord("Bb");
+            stat.AddWord("bB");
+            stat.AddWord("bb");
+            stat.AddWord("aA");
+            stat.AddWord("Aa");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(4, "aa"), Tuple.Create(3, "bb") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void check_same_frequency2()
+        {
+            stat.AddWord("bb");
+            stat.AddWord("bb");
+            stat.AddWord("bb");
+            stat.AddWord("bb");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            stat.AddWord("aa");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(4, "aa"), Tuple.Create(4, "bb") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void check_same_frequency_with_register()
+        {
+            stat.AddWord("Bbb");
+            stat.AddWord("bBb");
+            stat.AddWord("Bbb");
+            stat.AddWord("bbB");
+            stat.AddWord("aaa");
+            stat.AddWord("aaA");
+            stat.AddWord("aaa");
+            stat.AddWord("AAa");
+            CollectionAssert.AreEqual(new[] { Tuple.Create(4, "aaa"), Tuple.Create(4, "bbb") }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void empty_words()
+        {
+            stat.AddWord("");
+            stat.AddWord("");
+            stat.AddWord("");
+
+            CollectionAssert.AreEqual(new Tuple<int, string>[]{}, stat.GetStatistics());
+        }
+
+        [Test]
+        public void test_no_time()
+        {
+            stat.AddWord("ababas");
+            stat.AddWord("asdasd");
+            stat.AddWord("asdasd");
+            stat.AddWord("asdasasdjkasdhHHH");
+
+            CollectionAssert.AreEqual(new [] { }, stat.GetStatistics());
+        }
+
+        [Test]
+        public void nulls_words()
+        {
+            stat.AddWord(null);
+            stat.AddWord(null);
+            stat.AddWord(null);
+
+            CollectionAssert.AreEqual(new Tuple<int, string>[] { }, stat.GetStatistics());
+        }
 	}
 }

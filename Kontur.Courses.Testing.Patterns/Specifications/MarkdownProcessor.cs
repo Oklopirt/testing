@@ -8,7 +8,7 @@ namespace Kontur.Courses.Testing.Patterns.Specifications
 	{
 		public string Render(string input)
 		{
-			throw new NotImplementedException();
+		    //var emReplacer = new Regex("@(\W)_(.*?)_(\W)");
 		}
 	}
 
@@ -17,7 +17,10 @@ namespace Kontur.Courses.Testing.Patterns.Specifications
 	{
 		private readonly MarkdownProcessor md = new MarkdownProcessor();
 
-		//TODO see Markdown.txt
-		
+	    [Test]
+	    void em()
+	    {
+
+	    }
 	}
 }
